@@ -1,0 +1,20 @@
+{
+  "name": "movie-ticket-booking-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node -r dotenv/config app.js",
+    "dev": "node -r dotenv/config --watch app.js",
+    "seed": "node -r dotenv/config seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.9.5"
+  }
+}
