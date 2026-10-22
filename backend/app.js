@@ -185,15 +185,12 @@ app.post("/book-ticket/:id", async (req, res) => {
   return res.status(400).json({ message: "Not enough tickets available" });
 });
 
-app.use((err, _req, res, _next) => {
-  console.error("Request failed:", err);
-  return res.status(500).json({ message: "Internal server error" });
-});
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
 
-const startServer = async () => {
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) {
-    throw new Error("MONGODB_URI is missing. Set it in backend/.env.");
+    throw new Error("MONGODB_URI is missing. Set it in environment variables.");
   }
 
   if (/\s|<|>/.test(mongoUri)) {
@@ -204,13 +201,36 @@ const startServer = async () => {
 
   await mongoose.connect(mongoUri);
   console.log("MongoDB connected successfully");
-
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
 };
 
-startServer().catch((error) => {
-  console.error("Unable to start backend:", error.message);
-  process.exit(1);
+// Middleware to ensure database connection on serverless requests
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
+
+app.use((err, _req, res, _next) => {
+  console.error("Request failed:", err);
+  return res.status(500).json({ message: "Internal server error" });
+});
+
+// Start listener for local development
+if (!process.env.VERCEL) {
+  connectDB()
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error("Unable to start backend:", error.message);
+      process.exit(1);
+    });
+}
+
+module.exports = app;
+

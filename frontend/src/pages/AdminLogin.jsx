@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../api'
 import Admin from './Admin'
 
 const AdminLogin = () => {
@@ -19,7 +19,7 @@ const AdminLogin = () => {
     setError("")
 
     try {
-      await axios.post('http://localhost:5000/admin/login', {
+      await api.post('/admin/login', {
         username: username.trim(),
         password: password.trim()
       })

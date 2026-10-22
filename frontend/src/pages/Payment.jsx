@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 
 const Payment = () => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const Payment = () => {
         if (prev <= 1) {
           clearInterval(timer);
 
-          axios.post(`http://localhost:5000/book-ticket/${movie.id}`, { quantity })
+          api.post(`/book-ticket/${movie.id}`, { quantity })
             .then(() => {
               navigate('/confirm', { state: { movie, quantity, totalPrice: movie.price * quantity } });
             })

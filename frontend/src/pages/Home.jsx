@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import MovieCard from '../components/MovieCard';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ const Home = () => {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu toggle
 
   useEffect(() => {
-    axios.get("http://localhost:5000/movies")
+    api.get("/movies")
       .then(res => {
         setMovies(res.data);
         setLoading(false);

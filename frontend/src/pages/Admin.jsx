@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const Admin = ({ onLogout }) => {
   const [movies, setMovies] = useState([]);
@@ -17,7 +17,7 @@ const Admin = ({ onLogout }) => {
   // Fetch movies
   const fetchMovies = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/movies');
+      const res = await api.get('/movies');
       setMovies(res.data);
     } catch (err) {
       console.log(err);
@@ -41,12 +41,12 @@ const Admin = ({ onLogout }) => {
     try {
       if (editId) {
         // Update movie
-        await axios.put(`http://localhost:5000/update-movie/${editId}`, form);
+        await api.put(`/update-movie/${editId}`, form);
         setEditId(null);
         showMessage('Movie updated successfully!');
       } else {
         // Add new movie
-        await axios.post('http://localhost:5000/add-movie', form);
+        await api.post('/add-movie', form);
         showMessage('Movie added successfully!');
       }
 
@@ -83,7 +83,7 @@ const Admin = ({ onLogout }) => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this movie?")) {
       try {
-        await axios.delete(`http://localhost:5000/delete-movie/${id}`);
+        await api.delete(`/delete-movie/${id}`);
         showMessage('Movie deleted successfully!');
         fetchMovies();
       } catch (err) {

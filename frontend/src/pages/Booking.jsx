@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 
 const Booking = () => {
   const { id } = useParams(); // Movie ID from route
@@ -14,7 +14,7 @@ const Booking = () => {
   useEffect(() => {
     let isMounted = true;
 
-    axios.get("http://localhost:5000/movies")
+    api.get("/movies")
       .then(res => {
         if (!isMounted) return;
         const selected = res.data.find(m => m.id === id);
